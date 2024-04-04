@@ -11,7 +11,7 @@ pub enum Dimension {
 	X, Y
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct GraphConfig {
 	pub pause: bool,
 	pub samples: u32,
@@ -36,7 +36,6 @@ impl GraphConfig {
 #[allow(clippy::ptr_arg)] // TODO temporarily! it's a shitty solution
 pub trait DisplayMode {
 	// MUST define
-	fn from_args(args: &crate::cfg::SourceOptions) -> Self where Self : Sized;
 	fn axis(&self, cfg: &GraphConfig, dimension: Dimension) -> Axis; // TODO simplify this
 	fn process(&mut self, cfg: &GraphConfig, data: &Matrix<f64>) -> Vec<DataSet>;
 	fn mode_str(&self) -> &'static str;
@@ -83,3 +82,29 @@ impl DataSet {
 	}
 }
 
+
+pub(crate) fn update_value_f(val: &mut f64, base: f64, magnitude: f64, range: std::ops::Range<f64>) {
+	let delta = base * magnitude;
+	if *val + delta > range.end {
+		*val = range.end
+	} else if *val + delta < range.start {
+		*val = range.start
+	} else {
+		*val += delta;
+	}
+}
+
+pub(crate) fn update_value_i(val: &mut u32, inc: bool, base: u32, magnitude: f64, range: std::ops::Range<u32>) {
+	let delta = (base as f64 * magnitude) as u32;
+	if inc {
+		if range.end - delta < *val {
+			*val = range.end
+		} else {
+			*val += delta
+		}
+	} else if range.start + delta > *val {
+		*val = range.start
+	} else {
+		*val -= delta
+	}
+}

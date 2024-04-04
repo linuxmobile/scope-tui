@@ -1,9 +1,9 @@
 use crossterm::event::{Event, KeyModifiers, KeyCode};
 use ratatui::{widgets::{Axis, GraphType}, style::Style, text::Span};
 
-use crate::{app::{update_value_f, update_value_i}, input::Matrix};
+use crate::input::Matrix;
 
-use super::{DisplayMode, GraphConfig, DataSet, Dimension};
+use super::{update_value_f, update_value_i, DataSet, Dimension, DisplayMode, GraphConfig};
 
 #[derive(Default)]
 pub struct Oscilloscope {
@@ -15,10 +15,6 @@ pub struct Oscilloscope {
 }
 
 impl DisplayMode for Oscilloscope {
-	fn from_args(_opts: &crate::cfg::SourceOptions) -> Self {
-		Oscilloscope::default()
-	}
-
 	fn mode_str(&self) -> &'static str {
 		"oscillo"
 	}

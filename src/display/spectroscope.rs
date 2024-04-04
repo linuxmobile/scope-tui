@@ -3,9 +3,9 @@ use std::collections::VecDeque;
 use crossterm::event::{Event, KeyCode};
 use ratatui::{widgets::{Axis, GraphType}, style::Style, text::Span};
 
-use crate::{app::update_value_i, input::Matrix};
+use crate::input::Matrix;
 
-use super::{DisplayMode, GraphConfig, DataSet, Dimension};
+use super::{update_value_i, DataSet, Dimension, DisplayMode, GraphConfig};
 
 use rustfft::{FftPlanner, num_complex::Complex};
 
@@ -37,17 +37,20 @@ pub fn hann_window(samples: &[f64]) -> Vec<f64> {
 	windowed_samples
 }
 
-impl DisplayMode for Spectroscope {
-	fn from_args(opts: &crate::cfg::SourceOptions) -> Self {
+#[cfg(feature = "app")]
+impl From<&crate::cfg::SourceOptions> for Spectroscope {
+	fn from(value: &crate::cfg::SourceOptions) -> Self {
 		Spectroscope {
-			sampling_rate: opts.sample_rate,
-			buffer_size: opts.buffer,
+			sampling_rate: value.sample_rate,
+			buffer_size: value.buffer,
 			average: 1, buf: Vec::new(),
 			window: false,
 			log_y: true,
 		}
 	}
+}
 
+impl DisplayMode for Spectroscope {
 	fn mode_str(&self) -> &'static str {
 		"spectro"
 	}
@@ -80,7 +83,7 @@ impl DisplayMode for Spectroscope {
 			Dimension::X => ("frequency -", [20.0f64.ln(), ((cfg.samples as f64 / cfg.width as f64) * 20000.0).ln()]),
 			Dimension::Y => (
 				if self.log_y { "| level" } else { "| amplitude" },
-				[if self.log_y { 0. } else { 0.0 }, cfg.scale * 7.5] // very arbitrary but good default
+				[0.0, cfg.scale * 7.5] // very arbitrary but good default
 			),
 			// TODO super arbitraty! wtf! also ugly inline ifs, get this thing together!
 		};
