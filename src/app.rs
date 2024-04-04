@@ -1,5 +1,5 @@
 
-use std::{io, ops::Range, time::{Duration, Instant}};
+use std::{io, time::{Duration, Instant}};
 use ratatui::{
 	style::Color, widgets::{Table, Row, Cell}, symbols::Marker,
 	backend::Backend,
@@ -8,7 +8,7 @@ use ratatui::{
 };
 use crossterm::event::{self, Event, KeyCode, KeyModifiers};
 
-use crate::{display::{oscilloscope::Oscilloscope, spectroscope::Spectroscope, vectorscope::Vectorscope, Dimension, DisplayMode, GraphConfig}, input::{Matrix, DataSource}};
+use crate::{display::{oscilloscope::Oscilloscope, spectroscope::Spectroscope, update_value_f, update_value_i, vectorscope::Vectorscope, Dimension, DisplayMode, GraphConfig}, input::{DataSource, Matrix}};
 
 pub enum CurrentDisplayMode {
 	Oscilloscope,
