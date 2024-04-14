@@ -3,8 +3,10 @@ pub mod format;
 #[cfg(feature = "pulseaudio")]
 pub mod pulse;
 
+#[cfg(feature = "file")]
 pub mod file;
 
+#[cfg(feature = "cpal")]
 pub mod cpal;
 
 pub type Matrix<T> = Vec<Vec<T>>;

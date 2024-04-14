@@ -62,6 +62,7 @@ pub enum ScopeSource {
 		server_buffer: u32,
 	},
 
+	#[cfg(feature = "file")]
 	/// use a file from filesystem and read its content
 	File {
 		/// path on filesystem of file or pipe
@@ -72,6 +73,7 @@ pub enum ScopeSource {
 		limit_rate: bool,
 	},
 
+	#[cfg(feature = "cpal")]
 	/// use new experimental CPAL backend
 	Audio {
 		/// source device to attach to

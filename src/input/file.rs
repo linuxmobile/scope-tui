@@ -6,8 +6,8 @@ pub struct FileSource {
 	file: File,
 	buffer: Vec<u8>,
 	channels: usize,
-	sample_rate: usize,
-	limit_rate: bool,
+	_sample_rate: usize,
+	_limit_rate: bool,
 	// TODO when all data is available (eg, file) limit data flow to make it
 	// somehow visualizable. must be optional because named pipes block
 	// TODO support more formats
@@ -19,8 +19,8 @@ impl FileSource {
 		Ok(Box::new(
 			FileSource {
 				channels: opts.channels,
-				sample_rate: opts.sample_rate as usize,
-				limit_rate,
+				_sample_rate: opts.sample_rate as usize,
+				_limit_rate: limit_rate,
 				file: File::open(path)?,
 				buffer: vec![0u8; opts.buffer as usize * opts.channels],
 			}

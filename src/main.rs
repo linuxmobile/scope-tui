@@ -1,11 +1,5 @@
-mod app;
-mod cfg;
-mod music;
-mod input;
-mod display;
-
-use app::App;
-use cfg::{ScopeArgs, ScopeSource};
+use scope::app::App;
+use scope::cfg::{ScopeArgs, ScopeSource};
 use clap::Parser;
 use ratatui::{backend::CrosstermBackend, Terminal};
 use crossterm::{execute, terminal::{
@@ -25,12 +19,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 		#[cfg(feature = "file")]
 		ScopeSource::File { path, limit_rate } => {
-			input::file::FileSource::new(&path, &args.opts, limit_rate)?
+			scope::input::file::FileSource::new(&path, &args.opts, limit_rate)?
 		},
 
 		#[cfg(feature = "cpal")]
 		ScopeSource::Audio { device, timeout } => {
-			input::cpal::DefaultAudioDeviceWithCPAL::new(device.as_deref(), &args.opts, timeout)?
+			scope::input::cpal::DefaultAudioDeviceWithCPAL::new(device.as_deref(), &args.opts, timeout)?
 		}
 	};
 

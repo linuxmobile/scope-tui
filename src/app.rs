@@ -1,5 +1,5 @@
 
-use std::{io, ops::Range, time::{Duration, Instant}};
+use std::{io, time::{Duration, Instant}};
 use ratatui::{
 	style::Color, widgets::{Table, Row, Cell}, symbols::Marker,
 	backend::Backend,
@@ -8,7 +8,7 @@ use ratatui::{
 };
 use crossterm::event::{self, Event, KeyCode, KeyModifiers};
 
-use crate::{display::{oscilloscope::Oscilloscope, spectroscope::Spectroscope, vectorscope::Vectorscope, Dimension, DisplayMode, GraphConfig}, input::{Matrix, DataSource}};
+use crate::{display::{oscilloscope::Oscilloscope, spectroscope::Spectroscope, update_value_f, update_value_i, vectorscope::Vectorscope, Dimension, DisplayMode, GraphConfig}, input::{DataSource, Matrix}};
 
 pub enum CurrentDisplayMode {
 	Oscilloscope,
@@ -47,9 +47,9 @@ impl App {
 			},
 		};
 
-		let oscilloscope = Oscilloscope::from_args(source);
-		let vectorscope = Vectorscope::from_args(source);
-		let spectroscope = Spectroscope::from_args(source);
+		let oscilloscope = Oscilloscope::default();
+		let vectorscope = Vectorscope::default();
+		let spectroscope = Spectroscope::from(source);
 
 		App { 
 			graph, oscilloscope, vectorscope, spectroscope,
@@ -174,32 +174,6 @@ impl App {
 }
 
 // TODO can these be removed or merged somewhere else?
-
-pub fn update_value_f(val: &mut f64, base: f64, magnitude: f64, range: Range<f64>) {
-	let delta = base * magnitude;
-	if *val + delta > range.end {
-		*val = range.end
-	} else if *val + delta < range.start {
-		*val = range.start
-	} else {
-		*val += delta;
-	}
-}
-
-pub fn update_value_i(val: &mut u32, inc: bool, base: u32, magnitude: f64, range: Range<u32>) {
-	let delta = (base as f64 * magnitude) as u32;
-	if inc {
-		if range.end - delta < *val {
-			*val = range.end
-		} else {
-			*val += delta
-		}
-	} else if range.start + delta > *val {
-		*val = range.start
-	} else {
-		*val -= delta
-	}
-}
 
 fn make_header<'a>(cfg: &GraphConfig, module_header: &'a str, kind_o_scope: &'static str, fps: usize, pause: bool) -> Table<'a> {
 	Table::new(

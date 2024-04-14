@@ -8,10 +8,6 @@ use super::{DisplayMode, GraphConfig, DataSet, Dimension};
 pub struct Vectorscope {}
 
 impl DisplayMode for Vectorscope {
-	fn from_args(_opts: &crate::cfg::SourceOptions) -> Self {
-		Vectorscope::default()
-	}
-
 	fn mode_str(&self) -> &'static str {
 		"vector"
 	}
